@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoWatt — AI Appliance Electricity Audit & Bill Optimizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    (function() {
+      var savedTheme = localStorage.getItem("ecowatt_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Top Simple Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <div>
+          <h1>EcoWatt</h1>
+          <p class="tagline">Smart Appliance Electricity Audit &amp; AI Bill Optimizer</p>
+        </div>
+      </div>
+      <div class="nav-right-cluster">
+        <div class="live-status">
+          <span class="live-dot"></span>
+          <span>Live Current Draw: <strong id="header-total-amps">13.1 A</strong></span>
+        </div>
+        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleEcoWattTheme()" aria-label="Toggle Light and Dark Theme" title="Toggle Theme">
+          <span class="theme-toggle-icon" id="theme-toggle-icon">☀️</span>
+          <span class="theme-toggle-label" id="theme-toggle-label">Light</span>
+        </button>
+        <div id="user-auth-pill" class="user-auth-pill">
+          <!-- Populated dynamically by app.js: user badge + Sign Out, or Sign In button -->
+          <a href="login.html" class="btn-nav-login">
+            <span>Sign In</span>
+            <span>➔</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- Overview Financial Summary Banner -->
+    <section class="savings-banner">
+      <div class="savings-card-current">
+        <span class="label">CURRENT ESTIMATED BILL</span>
+        <div class="figure-row">
+          <span class="bill-figure" id="rep-current-bill">₹3,029</span>
+          <span class="bill-unit">/ month</span>
+        </div>
+        <small id="rep-current-units">378 kWh units • 19.3 A total load</small>
+      </div>
+
+      <div class="savings-arrow">➔</div>
+
+      <div class="savings-card-optimized">
+        <span class="label text-green">OPTIMIZED BILL WITH AI PLAN</span>
+        <div class="figure-row">
+          <span class="bill-figure text-green" id="rep-optimized-bill">₹1,845</span>
+          <span class="bill-unit">/ month</span>
+        </div>
+        <small id="rep-optimized-units">242 kWh units • 12.8 A optimized load</small>
+      </div>
+
+      <div class="savings-card-highlight">
+        <span class="label">YOU CAN SAVE</span>
+        <div class="figure-row">
+          <span class="save-figure" id="rep-save-amount">₹1,184</span>
+          <span class="save-unit">/ month</span>
+        </div>
+        <div class="save-percent-tag" id="rep-save-pct">Save 39% on your bill</div>
+      </div>
+    </section>
+
+    <!-- Real-Time Current Usage Analytics Dashboard (Daily & Monthly) -->
+    <section class="section current-analytics-section" id="current-analytics-section">
+      <div class="section-header">
+        <div>
+          <h2>📊 Real-Time Current Usage Analytics (Daily &amp; Monthly)</h2>
+          <p class="section-desc">Continuous current draw (Amperes), daily ampere-hour throughput (Ah), peak demand analysis, and 30-day projection.</p>
+        </div>
+
+        <div class="view-switch-group" role="tablist">
+          <button type="button" class="view-switch-btn active" id="btn-view-daily" onclick="switchCurrentView('daily')">
+            <span>📅 24-Hour Daily Profile</span>
+          </button>
+          <button type="button" class="view-switch-btn" id="btn-view-monthly" onclick="switchCurrentView('monthly')">
+            <span>🗓️ 30-Day Monthly Trend</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Core Current Metrics KPI Cards -->
+      <div class="current-metrics-grid">
+        <!-- Metric 1: Average Daily Current -->
+        <div class="metric-card metric-card-daily">
+          <div class="metric-top">
+            <span class="metric-icon">📅</span>
+            <span class="metric-badge">24H AVERAGE</span>
+          </div>
+          <span class="metric-label">AVERAGE DAILY CURRENT DRAW</span>
+          <div class="metric-figure-row">
+            <span class="metric-val text-blue" id="kpi-avg-daily-amps">8.4 A</span>
+            <span class="metric-subunit">continuous</span>
+          </div>
+          <div class="metric-pills-row">
+            <span class="metric-chip" id="kpi-daily-ah">201.6 Ah / day</span>
+            <span class="metric-chip" id="kpi-daily-kwh">12.7 kWh / day</span>
+          </div>
+          <div class="metric-footer-note" id="kpi-daily-cost">
+            <span>Estimated cost: <strong>₹102 / day</strong></span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Monthly Accumulated Current -->
+        <div class="metric-card metric-card-monthly">
+          <div class="metric-top">
+            <span class="metric-icon">🗓️</span>
+            <span class="metric-badge green">30-DAY TOTAL</span>
+          </div>
+          <span class="metric-label">MONTHLY ACCUMULATED CURRENT</span>
+          <div class="metric-figure-row">
+            <span class="metric-val text-yellow" id="kpi-monthly-ah">6,048 Ah</span>
+            <span class="metric-subunit">/ month</span>
+          </div>
+          <div class="metric-pills-row">
+            <span class="metric-chip" id="kpi-monthly-kwh">382 kWh units</span>
+            <span class="metric-chip">230V AC RMS</span>
+          </div>
+          <div class="metric-footer-note" id="kpi-monthly-slab">
+            <span>Current Slab: <strong>₹7.00 / unit</strong></span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Peak Coincident Demand Current -->
+        <div class="metric-card metric-card-peak">
+          <div class="metric-top">
+            <span class="metric-icon">⚡</span>
+            <span class="metric-badge amber">MAX DEMAND</span>
+          </div>
+          <span class="metric-label">PEAK COINCIDENT CURRENT</span>
+          <div class="metric-figure-row">
+            <span class="metric-val text-amber" id="kpi-peak-amps">16.2 A</span>
+            <span class="metric-subunit">simultaneous</span>
+          </div>
+          <div class="metric-pills-row">
+            <span class="metric-chip" id="kpi-mcb-utilization">51% of 32A MCB</span>
+            <span class="metric-chip">Evening Peak</span>
+          </div>
+          <div class="metric-footer-note">
+            <span>Peak window: <strong>7:00 PM – 10:30 PM</strong></span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Off-Peak / Standby Vampire Current -->
+        <div class="metric-card metric-card-standby">
+          <div class="metric-top">
+            <span class="metric-icon">🌙</span>
+            <span class="metric-badge purple">OFF-PEAK IDLE</span>
+          </div>
+          <span class="metric-label">STANDBY / VAMPIRE CURRENT</span>
+          <div class="metric-figure-row">
+            <span class="metric-val text-purple" id="kpi-standby-amps">1.15 A</span>
+            <span class="metric-subunit">baseline</span>
+          </div>
+          <div class="metric-pills-row">
+            <span class="metric-chip" id="kpi-standby-ah">27.6 Ah / night</span>
+            <span class="metric-chip">Continuous</span>
+          </div>
+          <div class="metric-footer-note" id="kpi-standby-cost">
+            <span>Vampire waste: <strong>~₹260 / month</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Chart View Container -->
+      <div class="chart-container-card">
+
+        <!-- VIEW A: 24-Hour Daily Hourly Current Profile -->
+        <div id="chart-view-daily">
+          <div class="chart-header">
+            <div>
+              <h3>📈 24-Hour Daily Current Draw Profile (Amperes by Hour)</h3>
+              <p class="chart-sub">Hourly current load profile calculated from your active appliances across day and night.</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-dot night"></span><span class="legend-text">Night Baseline</span>
+              <span class="legend-dot normal"></span><span class="legend-text">Daytime Load</span>
+              <span class="legend-dot peak"></span><span class="legend-text">Evening Peak</span>
+            </div>
+          </div>
+
+          <div class="hourly-chart-wrapper">
+            <div class="hourly-bars" id="hourly-bars-container">
+              <!-- Dynamically populated 24 hourly bars by app.js -->
+            </div>
+          </div>
+
+          <div class="chart-footer-insights" id="daily-chart-insights">
+            <span>💡 <strong>Current Flow Summary</strong>: Daily throughput <span id="insight-daily-ah">201.6 Ah</span> • Peak draw <span id="insight-peak-amps">16.2 A</span> during evening hours.</span>
+            <span>⚡ Grid Power Factor: <strong>0.96 PF</strong> (High Efficiency)</span>
+          </div>
+        </div>
+
+        <!-- VIEW B: 30-Day Monthly Trend & Indian Slab Defense -->
+        <div id="chart-view-monthly" style="display: none;">
+          <div class="chart-header">
+            <div>
+              <h3>🗓️ 30-Day Monthly Current Trajectory &amp; Indian Slab Defense</h3>
+              <p class="chart-sub">Projected weekly current consumption and Indian telescopic tariff slab thresholds.</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-dot green"></span><span class="legend-text">Slab 1 (₹4.75)</span>
+              <span class="legend-dot normal"></span><span class="legend-text">Slab 2 (₹7.00)</span>
+              <span class="legend-dot peak"></span><span class="legend-text">Slab 3 (₹8.50)</span>
+            </div>
+          </div>
+
+          <!-- 4 Weeks Progression -->
+          <div class="weekly-cards-grid" id="monthly-weekly-grid">
+            <!-- Dynamically populated 4 week progress cards by app.js -->
+          </div>
+
+          <!-- Telescopic Slab Progress Bar -->
+          <div class="slab-progress-card">
+            <div class="slab-progress-header">
+              <span class="slab-title">🏛️ Indian Telescopic Tariff Slabs (BESCOM / State DISCOM):</span>
+              <span class="slab-status" id="slab-defense-status">Active Slab: Slab 2 (101 - 200 kWh)</span>
+            </div>
+            <div class="slab-bar-track">
+              <div class="slab-segment slab-1" style="width: 33.3%;">0 - 100 kWh (₹4.75)</div>
+              <div class="slab-segment slab-2" style="width: 33.3%;">101 - 200 kWh (₹7.00)</div>
+              <div class="slab-segment slab-3" style="width: 33.4%;">201+ kWh (₹8.50)</div>
+              <div class="slab-pointer" id="slab-current-pointer" style="left: 65%;">
+                <span class="pointer-pin">📍</span>
+                <span class="pointer-label" id="slab-pointer-label">382 kWh</span>
+              </div>
+            </div>
+            <div class="slab-footer-tip" id="slab-defense-tip">
+              💡 <strong>AI Slab Defense Alert</strong>: Current monthly usage puts your home in Slab 3. Following the AI optimization plan cuts your usage back down!
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Appliance Current Contribution Bar -->
+        <div class="appliance-current-breakdown">
+          <div class="breakdown-title-row">
+            <span>⚡ Share of Total Daily Current Throughput by Appliance:</span>
+            <span id="highest-draw-tag" class="highest-tag">Air Conditioner: 48%</span>
+          </div>
+          <div class="breakdown-bar" id="appliance-share-bar">
+            <!-- Dynamically populated segments by app.js -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Appliance Audit Table Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>⚡ Live Appliance Electricity Audit &amp; Bill Calculator</h2>
+          <p class="section-desc">Change the <strong>Quantity</strong> and <strong>Hours/Day</strong> below. The <strong>Total Current (A)</strong>, <strong>Monthly Units (kWh)</strong>, and <strong>Cost (₹)</strong> update immediately with exact calculations!</p>
+        </div>
+
+        <!-- Quick Household Presets -->
+        <div class="preset-group">
+          <span class="preset-label">Presets:</span>
+          <button class="preset-btn" onclick="applyPreset('1bhk')">1 BHK</button>
+          <button class="preset-btn active" onclick="applyPreset('2bhk')">2-3 BHK</button>
+          <button class="preset-btn" onclick="applyPreset('office')">Office</button>
+          <button class="preset-btn" onclick="applyPreset('reset')">Reset</button>
+        </div>
+      </div>
+
+      <!-- Main Interactive Table -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="report-table" id="audit-table">
+            <thead>
+              <tr>
+                <th style="min-width: 220px;">APPLIANCE</th>
+                <th style="min-width: 130px; text-align: center;">QUANTITY</th>
+                <th style="min-width: 140px; text-align: center;">HOURS/DAY</th>
+                <th style="min-width: 130px;">TOTAL CURRENT (A)</th>
+                <th style="min-width: 130px;">UNITS (KWH/MO)</th>
+                <th style="min-width: 120px;">MONTHLY COST</th>
+                <th style="min-width: 280px;">AI RECOMMENDATION</th>
+              </tr>
+            </thead>
+            <tbody id="report-table-body">
+              <!-- Dynamically rendered with interactive controls by app.js -->
+            </tbody>
+            <tfoot>
+              <tr class="table-totals-row">
+                <td><strong>TOTAL SUMMARY</strong></td>
+                <td style="text-align: center;"><strong id="total-qty-sum">12 units</strong></td>
+                <td style="text-align: center;"><span class="text-dim">Combined</span></td>
+                <td><strong class="text-blue" id="total-current-sum">19.3 A</strong></td>
+                <td><strong class="text-white" id="total-units-sum">378 kWh</strong></td>
+                <td><strong class="text-yellow" id="total-cost-sum">₹3,029</strong></td>
+                <td><button class="btn-download-sm" onclick="downloadReport()">📥 Download Audit Report</button></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personalized AI Action Plan Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>💡 Personalized AI Action Plan to Cut Your Bill</h2>
+          <p class="section-desc">Practical, high-impact recommendations generated by AI based on your actual appliance numbers.</p>
+        </div>
+      </div>
+
+      <div class="rec-grid" id="report-recommendations-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Simple AI Assistant Box -->
+    <section class="section">
+      <div class="ai-ask-box">
+        <div class="ask-header">
+          <span class="ai-sparkle">✨</span>
+          <strong>Ask EcoWatt AI Assistant:</strong> "How do I reduce my electricity bills further?"
+        </div>
+        
+        <div class="quick-chips">
+          <button class="chip" onclick="askAi('How can I reduce my AC bill?')">❄️ How to cut AC electricity costs?</button>
+          <button class="chip" onclick="askAi('Which appliance uses the most current?')">⚡ Which appliance uses the most current?</button>
+          <button class="chip" onclick="askAi('What is the best way to save ₹1,000 this month?')">💰 How to save ₹1,000 this month</button>
+          <button class="chip" onclick="askAi('How do BLDC fans save money?')">🌀 Why upgrade to BLDC fans?</button>
+        </div>
+
+        <div class="ai-response-area" id="ai-response" style="display:none;">
+          <div class="ai-bubble-content" id="ai-response-text"></div>
+        </div>
+
+        <form class="ai-input-form" id="ai-query-form" onsubmit="handleCustomQuery(event)">
+          <input type="text" id="ai-input" placeholder="Ask AI: e.g. 'Why is my AC bill so high?' or 'How do I save ₹500?'">
+          <button type="submit" class="btn-ask">Ask AI</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>⚡ <strong>EcoWatt</strong> — Smart Appliance Electricity Audit &amp; AI Bill Optimization System</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

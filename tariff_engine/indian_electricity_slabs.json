@@ -1,0 +1,70 @@
+{
+  "currency": "INR",
+  "symbol": "₹",
+  "states": [
+    {
+      "id": "KA_BESCOM",
+      "name": "Karnataka - BESCOM (Bangalore)",
+      "fixed_charge_per_kw_month": 90.0,
+      "electricity_duty_pct": 9.0,
+      "fppca_per_kwh": 0.45,
+      "slabs": [
+        { "min": 0, "max": 100, "rate": 4.75, "label": "Slab 1 (0-100 kWh)" },
+        { "min": 100, "max": 200, "rate": 7.00, "label": "Slab 2 (101-200 kWh)" },
+        { "min": 200, "max": 999999, "rate": 8.50, "label": "Slab 3 (> 200 kWh)" }
+      ]
+    },
+    {
+      "id": "MH_MSEDCL",
+      "name": "Maharashtra - MSEDCL (Mahavitaran)",
+      "fixed_charge_per_kw_month": 118.0,
+      "electricity_duty_pct": 16.0,
+      "fppca_per_kwh": 0.65,
+      "slabs": [
+        { "min": 0, "max": 100, "rate": 4.41, "label": "Slab 1 (0-100 kWh)" },
+        { "min": 100, "max": 300, "rate": 9.64, "label": "Slab 2 (101-300 kWh)" },
+        { "min": 300, "max": 500, "rate": 13.61, "label": "Slab 3 (301-500 kWh)" },
+        { "min": 500, "max": 999999, "rate": 15.57, "label": "Slab 4 (> 500 kWh)" }
+      ]
+    },
+    {
+      "id": "TN_TANGEDCO",
+      "name": "Tamil Nadu - TANGEDCO / TNEB",
+      "fixed_charge_per_kw_month": 50.0,
+      "electricity_duty_pct": 5.0,
+      "fppca_per_kwh": 0.25,
+      "slabs": [
+        { "min": 0, "max": 100, "rate": 0.00, "label": "Slab 1 (0-100 kWh Free Subsidy)" },
+        { "min": 100, "max": 200, "rate": 2.25, "label": "Slab 2 (101-200 kWh)" },
+        { "min": 200, "max": 500, "rate": 4.50, "label": "Slab 3 (201-500 kWh)" },
+        { "min": 500, "max": 999999, "rate": 8.75, "label": "Slab 4 (> 500 kWh)" }
+      ]
+    },
+    {
+      "id": "DL_BSES",
+      "name": "Delhi - BSES Rajdhani / Yamuna",
+      "fixed_charge_per_kw_month": 60.0,
+      "electricity_duty_pct": 5.0,
+      "fppca_per_kwh": 0.38,
+      "slabs": [
+        { "min": 0, "max": 200, "rate": 3.00, "label": "Slab 1 (0-200 kWh Subsidy eligible)" },
+        { "min": 200, "max": 400, "rate": 4.50, "label": "Slab 2 (201-400 kWh)" },
+        { "min": 400, "max": 800, "rate": 6.50, "label": "Slab 3 (401-800 kWh)" },
+        { "min": 800, "max": 999999, "rate": 8.00, "label": "Slab 4 (> 800 kWh)" }
+      ]
+    },
+    {
+      "id": "UP_UPPCL",
+      "name": "Uttar Pradesh - UPPCL Residential",
+      "fixed_charge_per_kw_month": 110.0,
+      "electricity_duty_pct": 7.5,
+      "fppca_per_kwh": 0.40,
+      "slabs": [
+        { "min": 0, "max": 150, "rate": 5.50, "label": "Slab 1 (0-150 kWh)" },
+        { "min": 150, "max": 300, "rate": 6.00, "label": "Slab 2 (151-300 kWh)" },
+        { "min": 300, "max": 500, "rate": 6.50, "label": "Slab 3 (301-500 kWh)" },
+        { "min": 500, "max": 999999, "rate": 7.00, "label": "Slab 4 (> 500 kWh)" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "ecowatt",
+  "version": "1.0.0",
+  "description": "Smart IoT Energy Monitor & AI Bill Optimizer with Appliance Audit Table",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "serve": "npx serve -l 8080"
+  },
+  "keywords": [
+    "iot",
+    "energy-monitoring",
+    "esp32",
+    "pzem-004t",
+    "sct-013",
+    "nilm",
+    "tariff-optimizer"
+  ],
+  "author": "EcoWatt",
+  "license": "MIT"
+}
